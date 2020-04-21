@@ -15,7 +15,7 @@ target_stl_file = sys.argv[1]
 
 
 
-TEST_COMMAND = Template('''/home/logic/AppImage/PrusaSlicer-2.2.0+linux-x64-202003211856.AppImage --datadir ~/3dprinter-config/Slic3r-settings --rotate $z_angle --rotate-x $x_angle --rotate-y $y_angle --export-3mf --export-gcode --repair --support-material --support-material-auto --center 100,100 --output /tmp /tmp/optimize.stl''')
+TEST_COMMAND = Template('''/home/logic/AppImage/PrusaSlicer-2.2.0+linux-x64-202003211856.AppImage --datadir ~/3dprinter-config/Slic3r-settings --rotate $z_angle --rotate-x $x_angle --rotate-y $y_angle --repair --support-material --support-material-auto --center 100,100 --dont-support-bridges --export-3mf --export-gcode --output /tmp /tmp/optimize.stl''')
 
 three_mf_filename = Template("")
 cwd_3mf_filename = Template('{}/test_$x_angle_$yangle_$z_angle.3mf'.format(os.getcwd()))
@@ -51,7 +51,10 @@ def get_run_config():
   return run_config
 
 def run_slic3r(x,y,z):
-  result = subprocess.check_output(TEST_COMMAND.substitute(z_angle=z, y_angle=y, x_angle=x).split(' '))
+  test_command = TEST_COMMAND.substitute(z_angle=z, y_angle=y, x_angle=x)
+  print(test_command)
+  result = subprocess.check_output(test_command.split(' '))
+  print(result)
   return result
 
 def store_generated_3mf(target_filename):
